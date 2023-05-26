@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const generateMarkdown = require('./utils/generateMarkdown.js');
 const { error } = require('console');
+const { type } = require('os');
 // TODO: Create an array of questions for user input
 const questions = [
     {
@@ -177,9 +178,9 @@ const questions = [
     },
     {
         type: 'checkbox',
-        name: 'built with',
+        name: 'builtWith',
         message: 'Please select any/all technologies used to build your application.',
-        choices: ['HTML', 'CSS', 'JavaScript', 'Node.js', 'SASS', 'Express.js'],
+        choices: ['HTML' , ' CSS ' , ' JavaScript' , ' Node.js' , ' SASS' , ' Express.js'],
         default: 0,
         when: ({contents}) => {
             if (contents.indexOf('Built With') > -1) {
@@ -252,6 +253,47 @@ const questions = [
 ];
 
 const screenshotQue = [
+    {
+        type: 'input',
+        name: 'screenshotLink',
+        message: 'Please provide a link for your screenshot. (Required)',
+        validate: screenshotLinkInput => {
+            if (screenshotLinkInput) {
+                return true;
+            } else {
+                console.log('Please provide a screenshot link!');
+            }
+        }
+    },
+
+    {
+        type: 'input',
+        name: 'screenshotAlt',
+        message: 'Please provide alternate text for your screenshot. (Required)',
+        validate: screenshotAltInput => {
+            if (screenshotAltInput) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+
+    {
+        type: 'input',
+        name: 'screenshotDesc',
+        message: 'Please provide a short description of your screenshot. (Optional)'
+    },
+
+    {
+        type: 'confirm',
+        name: 'confirmAddScreenshot',
+        message: 'Would you like to add another screenshot?',
+        default: false
+    }
+];
+
+const creditQue = [
     {
         type: 'input',
         name: 'creditName',
@@ -328,7 +370,7 @@ addCredits = readmeInfo => {
 
 // TODO: Create a function to write README file
 function writeToFile(fileName, data) {
-    fs.writeFile(`./dist/${fileName}`, data, error => {
+    fs.writeFile(`./${fileName}`, data, error => {
         if (error) {
             throw error
         };
