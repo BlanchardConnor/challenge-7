@@ -2,8 +2,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const generateMarkdown = require('./utils/generateMarkdown.js');
-const { error } = require('console');
-const { type } = require('os');
+
 // TODO: Create an array of questions for user input
 const questions = [
     {
@@ -117,7 +116,7 @@ const questions = [
     {
         type: 'input',
         name: 'link',
-        message: 'Please provide a link to your deployed application.',
+        message: 'Please provide a link to your deployed application. (Required)',
         when: ({contents}) => {
             if (contents.indexOf('Deployed Apllication') > -1) {
                 return true;
@@ -137,7 +136,7 @@ const questions = [
     {
         type: 'input',
         name: 'installation',
-        message: 'Please provide a list of any required packages for installation.',
+        message: 'Please provide a list of any required packages for installation. (Required)',
         when: ({contents}) => {
             if (contents.indexOf('Installation') > -1) {
                 return true;
@@ -166,20 +165,12 @@ const questions = [
             } else {
                 return false;
             }
-        },
-        validate: licenseInput => {
-            if (licenseInput) {
-                return true;
-            } else {
-                console.log('Please provide license info!');
-                return false;
-            }
         }
     },
     {
         type: 'checkbox',
         name: 'builtWith',
-        message: 'Please select any/all technologies used to build your application.',
+        message: 'Please select any/all technologies used to build your application. (Required)',
         choices: ['HTML' , ' CSS ' , ' JavaScript' , ' Node.js' , ' SASS' , ' Express.js'],
         default: 0,
         when: ({contents}) => {
@@ -188,12 +179,20 @@ const questions = [
             } else {
                 return false;
             }
+        },
+        validate: builtWithInput => {
+            if (builtWithInput) {
+                return true;
+            } else {
+                console.log('Please select at least one technology!');
+                return false;
+            }
         }
     },
     {
         type: 'input',
         name: 'contributions',
-        message: 'Please enter any guidelines regarding contributions.',
+        message: 'Please enter any guidelines regarding contributions. (Required)',
         when: ({contents}) => {
             if (contents.indexOf('Contributions') > -1) {
                 return true;
@@ -213,7 +212,7 @@ const questions = [
     {
         type: 'input',
         name: 'tests',
-        message: 'Please enter test info for your application.',
+        message: 'Please enter test info for your application. (Required)',
         when: ({contents}) => {
             if (contents.indexOf('Tests') > -1) {
                 return true;
@@ -233,7 +232,7 @@ const questions = [
     {
         type: 'input',
         name: 'questions',
-        message: 'Please provide an email for others to reach you with questions regarding your application.',
+        message: 'Please provide an email for others to reach you with questions regarding your application. (Required)',
         when: ({contents}) => {
             if (contents.indexOf('Questions') > -1) {
                 return true;
@@ -261,7 +260,8 @@ const screenshotQue = [
             if (screenshotLinkInput) {
                 return true;
             } else {
-                console.log('Please provide a screenshot link!');
+                console.log('Please provide a screenshot link!')
+                return false;
             }
         }
     },
@@ -315,7 +315,7 @@ const creditQue = [
             if (creditLink) {
                 return true;
             } else {
-                console.log('Please enter a name for the credit!');
+                console.log('Please enter a link for the credit!');
                 return false;
             }
         }
